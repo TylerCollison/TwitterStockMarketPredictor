@@ -1,0 +1,5 @@
+SentimentAnalysis/Data/
+SentimentAnalysis/WordVectors/
+SentimentAnalysis/tensorboard/
+SentimentAnalysis/TwitterSA/
+SentimentAnalysis/IMDBSA/
