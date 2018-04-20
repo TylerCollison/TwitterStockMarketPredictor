@@ -1,10 +1,10 @@
 # Removes punctuation, parentheses, question marks, etc., and leaves only alphanumeric characters
 import tweepy,re
 import datetime
-# ConsumerKey = ''
-# ConsumerSecrete = ''
-# AccessToken = ''
-# AccessTokenSecrete = ''
+# ConsumerKey = '2IUaHA0nl6GJQY1Nc9p80AnTX'
+# ConsumerSecrete = 'EWyPryDTgJKb4J8yTSvGREgSRa2O9RKOYTt9KKbNz3l8AN6q1X'
+# AccessToken = '957013451913809922-VMeOB9WC7WBWc2VV09CKXCV6Pqy50nx'
+# AccessTokenSecrete = '1bEdmbCATZfkLaH941CL5A0aionMZGgOZ7icVjnlqrc12'
 
 emoticons_str = r"""
     (?:
@@ -20,12 +20,20 @@ regex_str = [
     r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)",  # hash-tags
     r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&amp;+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+',  # URLs
 
-    #r'(?:(?:\d+,?)+(?:\.?\d+)?)',  # numbers
+    #r'(?:(?:\d+,?)+(?:\.?\d+)?)',  # numbers #It will be handled later
     r"(?:[a-z][a-z'\-_]+[a-z])",  # words with - and '
     r'(?:[\w_]+)',  # other words
     r'(?:\S)'  # anything else
 ]
-
+emoticonDic={
+    ')':'smile',
+    '(':'sad',
+    'D':'laugh',
+    '*':'kiss',
+    '|':'straight face',
+    'O':'surpise',
+    'o':'surpise'
+}
 tokens_re = re.compile(r'(' + '|'.join(regex_str) + ')', re.VERBOSE | re.IGNORECASE)
 emoticon_re = re.compile(r'^' + emoticons_str + '$', re.VERBOSE | re.IGNORECASE)
 
@@ -33,7 +41,7 @@ DicName="dic/normDic.txt"
 class PreProcessor:
     def __init__(self):
         self.strip_special_chars = re.compile("[^A-Za-z0-9 ]+")
-    
+
     def establishConnection(self):
         self.auth = tweepy.OAuthHandler(ConsumerKey, ConsumerSecrete)
         self.auth.set_access_token(AccessToken, AccessTokenSecrete)
@@ -46,8 +54,13 @@ class PreProcessor:
         tokens = tokens_re.findall(s)
         if lowercase:
             tokens = [token if emoticon_re.search(token) else token.lower() for token in tokens]
+        #Remove whitespace
         for i in range(0,len(tokens)):
             tokens[i] = "".join(tokens[i].split())
+            if tokens[i][0]==':':
+                mouth=tokens[i][len(tokens[i])-1]
+                if mouth in emoticonDic:
+                    tokens[i]=emoticonDic[mouth]
         #Normalization
         with open(DicName, "r") as f:
             line=f.readline()
@@ -60,7 +73,6 @@ class PreProcessor:
                     if findIndex==0 and line[findIndex+len(tokens[i])+1]=='|':
                         #print("Item Replaced (Dict): ", tokens[i], " # ", line)
                         tokens[i] = line[(len(tokens[i]) + 3):]
-                        continue
                 line=f.readline()
         #Remove hashTag, @, punctuations(not in the word), and url  (OPTIONAL)
         if "RT" in tokens:
@@ -76,8 +88,8 @@ class PreProcessor:
         return tokens
     # NOTE: This is only used for analyzing real time tweets
     # Get a list of processed tweets in the list
-    # @param keyword - keyword to search for
-    # @return a list of tweets in the format of a list of words
+    # @param s - input raw string
+    # @return a list of processed words
     def getProcessedTweets(self,keyword,numOfTweet=1):
         result=[]
         i = 0
