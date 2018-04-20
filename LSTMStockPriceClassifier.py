@@ -66,7 +66,7 @@ def sentiment_stockPrice_series(sentimentScore, stockPrice, scaler):
 
 # load dataset transfer it into a supervised learning data
 scaler = MinMaxScaler(feature_range=(0,1))
-dataSet = sentiment_stockPrice_series('1.csv', '2.csv',scaler)
+dataSet = sentiment_stockPrice_series('sampleSentiment.csv', 'FBstockPrice.csv',scaler)
 values = dataSet.values
  
 print('dataset')
