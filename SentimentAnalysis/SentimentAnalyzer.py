@@ -51,9 +51,6 @@ def createLTMLRNNGraph(numClasses, maxSeqLength, batchSize, lstmUnits, learningR
 
         # Create embedding weights for word vectors
         numWordVectors, numDimensions = wordVectors.shape
-        # embedding_weights = tf.Variable(tf.constant(0.0, shape=[numWordVectors, numDimensions]),trainable=False, name="embedding_weights") 
-        # embedding_placeholder = tf.placeholder(tf.float32, [numWordVectors, numDimensions])
-        # embedding_init = embedding_weights.assign(embedding_placeholder)
 
         # Create a 3-D tensor by looking up the word vectors using IDs in the input data
         data = tf.Variable(tf.zeros([batchSize, maxSeqLength, numDimensions]), dtype=tf.float32)
@@ -75,7 +72,7 @@ def createLTMLRNNGraph(numClasses, maxSeqLength, batchSize, lstmUnits, learningR
         correctPred = tf.equal(tf.argmax(prediction, 1), tf.argmax(labels, 1))
         accuracy = tf.reduce_mean(tf.cast(correctPred, tf.float32))
 
-        # Use ADAM to optimize the model
+        # Use ADAM (Gradient Descent) to optimize the model
         loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prediction, labels=labels))
         optimizer = tf.train.AdamOptimizer(learning_rate=learningRate).minimize(loss)
 
@@ -153,4 +150,4 @@ class SentimentAnalyzer:
     # Returns 1 for positive; 0 for negative
     def Evaluate(self, textSamples):
         idMatrix = generateWordIDMatrix(self.maxSeqLength, textSamples, self.wordMap, len(self.wordMap))
-        return tf.argmin(self.session.run(self.prediction, {self.input_data: idMatrix}), 1).eval()
+        return np.argmin(self.session.run(self.prediction, {self.input_data: idMatrix}), 1)

@@ -2,7 +2,7 @@ from SentimentAnalyzer import SentimentAnalyzer
 import numpy as np
 
 class TwitterSentimentAnalyzer:
-    def __init__(self, maxSeqLength, batchSize, lstmUnits, learningRate, wordMap, wordVectors):
+    def __init__(self):
         wordVectors = np.load("TwitterSA/wordVectors.npy")
         wordMap = np.load("TwitterSA/wordMap.npy").item()
         parameterMap = np.load("TwitterSA/paramMap.npy").item()
