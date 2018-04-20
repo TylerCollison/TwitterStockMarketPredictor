@@ -1,10 +1,10 @@
 # Removes punctuation, parentheses, question marks, etc., and leaves only alphanumeric characters
 import tweepy,re
 import datetime
-# ConsumerKey = '2IUaHA0nl6GJQY1Nc9p80AnTX'
-# ConsumerSecrete = 'EWyPryDTgJKb4J8yTSvGREgSRa2O9RKOYTt9KKbNz3l8AN6q1X'
-# AccessToken = '957013451913809922-VMeOB9WC7WBWc2VV09CKXCV6Pqy50nx'
-# AccessTokenSecrete = '1bEdmbCATZfkLaH941CL5A0aionMZGgOZ7icVjnlqrc12'
+# ConsumerKey = ''
+# ConsumerSecrete = ''
+# AccessToken = ''
+# AccessTokenSecrete = ''
 
 emoticons_str = r"""
     (?:
